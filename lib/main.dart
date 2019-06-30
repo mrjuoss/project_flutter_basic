@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'model_user.dart';
+import 'detail_user.dart';
 
 void main() => runApp(new MyApp());
 
@@ -44,7 +48,19 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        elevation: 0.1,
+        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+        title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.list),
+            onPressed: () {
+              exit(0);
+            },
+          )
+        ],
+      ),
       body: Container(
         child: FutureBuilder(
           future: _getUsers(),
@@ -57,23 +73,50 @@ class _HomeState extends State<Home> {
               );
             } else {
               return ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(snapshot.data[index].picture),
+                  return Card(
+                    elevation: 8.0,
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                      decoration:
+                          BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 5.0),
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(snapshot.data[index].picture),
+                        ),
+                        title: Text(
+                          snapshot.data[index].name,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          snapshot.data[index].email,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        trailing: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.white,
+                          size: 30.0,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailUser(snapshot.data[index])),
+                          );
+                        },
+                      ),
                     ),
-                    title: Text(snapshot.data[index].name),
-                    subtitle: Text(snapshot.data[index].email),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) =>
-                                DetailUser(snapshot.data[index])),
-                      );
-                    },
                   );
                 },
               );
@@ -81,51 +124,31 @@ class _HomeState extends State<Home> {
           },
         ),
       ),
+      bottomNavigationBar: bottomBar,
     );
   }
 }
 
-class User {
-  int index;
-  String about;
-  String name;
-  String email;
-  String picture;
-
-  User(
-    this.index,
-    this.about,
-    this.name,
-    this.email,
-    this.picture,
-  );
-}
-
-class DetailUser extends StatelessWidget {
-  final User user;
-  DetailUser(this.user);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(user.name),
-      ),
-      body: Column(
-        children: <Widget>[
-          Card(
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(user.picture),
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topCenter),
-              ),
-              child: Text(user.about),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+final bottomBar = Container(
+  height: 55.0,
+  child: BottomAppBar(
+    color: Color.fromRGBO(58, 66, 86, 1.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(Icons.home, color: Colors.white),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Icon(Icons.hotel, color: Colors.white),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: Icon(Icons.account_box, color: Colors.white),
+          onPressed: () {},
+        ),
+      ],
+    ),
+  ),
+);
