@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'model_user.dart';
+import 'package:tugas_akhir_osg04028/models/my_card.dart';
 
-class DetailUser extends StatelessWidget {
-  final User user;
-  DetailUser(this.user);
+class DetailCard extends StatelessWidget {
+  final MyCard myCard;
+  DetailCard(this.myCard);
 
   @override
   Widget build(BuildContext context) {
     final topContentText = Container(
         margin: EdgeInsets.fromLTRB(30.0, 250.0, 0.0, 0.0),
-        child: Text(user.name,
+        child: Text(myCard.name,
             style: TextStyle(fontSize: 20.0, color: Colors.white)));
 
     final topContent = Stack(
@@ -19,7 +19,7 @@ class DetailUser extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.5,
             decoration: new BoxDecoration(
               image: new DecorationImage(
-                image: NetworkImage(user.picture),
+                image: NetworkImage(myCard.cardImages[0].imageUrl),
                 fit: BoxFit.cover,
               ),
             )),
@@ -27,7 +27,7 @@ class DetailUser extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.5,
           padding: EdgeInsets.all(10.0),
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .9)),
+          decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .5)),
           child: topContentText,
         ),
         Positioned(
@@ -44,8 +44,8 @@ class DetailUser extends StatelessWidget {
     );
 
     final bottomContentText = Text(
-      user.about,
-      style: TextStyle(fontSize: 12.0),
+      myCard.desc,
+      style: TextStyle(fontSize: 14.0),
     );
 
     final bottomContent = Container(
